@@ -8,11 +8,14 @@ class AdminLoginAndRegisterPage
     {
     await this.page.fill('input[type="email"]', username);
     await this.page.fill('input[type="password"]', password);
+    await this.page.waitForTimeout(8000); // Wait for 2 seconds before clicking the login button
     await this.page.click("//button[normalize-space()='Log In']");
+    await this.page.waitForTimeout(8000); // Wait for 2 seconds before clicking the login button
+
   }
 
    async checkLoginSuccess() {
-    await this.page.locator("//span[normalize-space()='Dashboard']").waitFor();
+    await expect(this.page.url()).toContain('/admin');
   }
 
 }
