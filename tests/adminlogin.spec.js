@@ -12,6 +12,6 @@ test("verify the login functionality with valid credentials",async({page}) =>{
     await expect(page).toHaveTitle('AgarbattiKart — Incense & Pooja Essentials')
     await homepage.goToLoginPage()
     await adminLoginAndRegister.adminlogin(ADMIN_USERNAME, ADMIN_PASSWORD)
-    await adminPage.checkLoginSuccess();
+    await adminLoginAndRegister.checkLoginSuccess();
 
 })
