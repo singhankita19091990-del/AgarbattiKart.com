@@ -16,7 +16,8 @@ test("verify the login functionality with valid credentials",async({page}) =>{
 
 })
 
-test("verify the add to cart functionality",async({page}) =>{
+
+test("verify the add to cart functionality",async({page}) => {
     const homepage = new Homepage(page)
     const adminLoginAndRegister = new AdminLoginAndRegister(page)
     await homepage.gotohomepage()
