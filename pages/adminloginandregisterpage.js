@@ -20,6 +20,13 @@ class AdminLoginAndRegisterPage
     await expect(this.page.url()).toContain('/admin');
   }
 
+async addtoCart() {
+    await this.page.click("//a[normalize-space()='View Store']");
+    await this.page.click("//button[@class='btn-primary mt-2 w-full'][normalize-space()='Add to Cart'][1]");
+    await this.page.click("//span[@class='relative']//*[name()='svg']");
+    
+
+
 }
 
 module.exports = AdminLoginAndRegisterPage;
