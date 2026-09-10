@@ -7,7 +7,7 @@ class homepage
 
     async gotohomepage()
     {
-        await this.page.goto('https://www.agarbattikart.com/')
+        await this.page.goto('https://www.agarbattikart.com/');
     }
 
     async goToLoginPage() {
