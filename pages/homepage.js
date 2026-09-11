@@ -1,12 +1,10 @@
-class homepage
-{
-    constructor(page)
-    {
+class homepage {
+    constructor(page) {
         this.page = page;
+        this.searchBox = page.locator('input[placeholder*="Search for Agarbatti Machines, Chemical Compounds, DEP Oil…"]');
     }
 
-    async gotohomepage()
-    {
+    async gotohomepage() {
         await this.page.goto('https://www.agarbattikart.com/');
     }
 
@@ -15,7 +13,12 @@ class homepage
         await this.page.locator("//a[normalize-space()='Login / Register']").click();
     }
 
+    async searchProduct(productName) {
+        await this.searchBox.fill(productName);
+        await this.page.locator("//button[@class='absolute right-1.5 top-1/2 -translate-y-1/2 rounded-md bg-primary-600 p-2 text-white']//*[name()='svg']").click();
     }
+
+}
 
 
 module.exports = homepage;

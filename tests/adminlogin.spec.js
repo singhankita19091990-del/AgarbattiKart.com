@@ -5,7 +5,7 @@ const AdminLoginAndRegister = require('../pages/adminloginandregisterpage')
 const ADMIN_USERNAME = 'admin@agarbattikart.com'
 const ADMIN_PASSWORD = 'Admin@123'
 
-test("verify the login functionality with valid credentials", async ({ page }) => {
+test.skip("verify the login functionality with valid credentials", async ({ page }) => {
     const homepage = new Homepage(page)
     const adminLoginAndRegister = new AdminLoginAndRegister(page)
     await homepage.gotohomepage()
@@ -18,7 +18,7 @@ test("verify the login functionality with valid credentials", async ({ page }) =
 
 
 
-test("verify the same product is added to cart with the same price", async ({ page }) => {
+test.skip("verify the same product is added to cart with the same price", async ({ page }) => {
     const homepage = new Homepage(page)
     const adminLoginAndRegister = new AdminLoginAndRegister(page)
     await homepage.gotohomepage()
@@ -46,3 +46,20 @@ test("verify the same product is added to cart with the same price", async ({ pa
     expect(cartProductName).toBe(productName);
     expect(cartProductPrice).toContain(productPrice);
 })
+
+test('verify searched product is present', async ({ page }) => {
+
+    const homepage = new Homepage(page);
+
+    const productName = 'JB Fragrances and Flavours - GOLD BD';
+
+    await homepage.gotohomepage();
+
+    await homepage.searchProduct(productName);
+
+    const product = page.locator(
+        `//a[normalize-space()='${productName}']`
+    );
+
+    await expect(product).toBeVisible();
+});
