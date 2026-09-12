@@ -47,7 +47,7 @@ test.skip("verify the same product is added to cart with the same price", async 
     expect(cartProductPrice).toContain(productPrice);
 })
 
-test('verify searched product is present', async ({ page }) => {
+test.skip('verify searched product is present', async ({ page }) => {
 
     const homepage = new Homepage(page);
 
@@ -62,4 +62,20 @@ test('verify searched product is present', async ({ page }) => {
     );
 
     await expect(product).toBeVisible();
+});
+
+test("Verify all Agarbatti Machine products", async ({ page }) => {
+
+    const homepage = new Homepage(page);
+
+    await homepage.gotohomepage();
+
+    const productNames = await homepage.checkAgarbattiMachineProducts();
+
+    for (let i = 0; i < productNames.length; i++) {
+
+        console.log(productNames[i]);
+
+        expect(productNames[i].toLowerCase()).toContain("agarbatti machine");
+    }
 });

@@ -18,7 +18,34 @@ class homepage {
         await this.page.locator("//button[@class='absolute right-1.5 top-1/2 -translate-y-1/2 rounded-md bg-primary-600 p-2 text-white']//*[name()='svg']").click();
     }
 
+      async checkAgarbattiMachineProducts() {
+
+        
+        await this.page.locator(
+            "a[href='/shop?category=agarbatti-machines']"
+        ).click();
+
+        
+        const products = this.page.locator(
+            "//a[contains(@href,'/product/')]"
+        );
+
+        const count = await products.count();
+
+        const productNames = [];
+
+        for (let i = 0; i < count; i++) {
+
+            const productName = await products.nth(i).textContent();
+
+            productNames.push(productName);
+        }
+
+        return productNames;
+    }
 }
+
+
 
 
 module.exports = homepage;
