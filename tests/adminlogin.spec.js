@@ -50,18 +50,13 @@ test.skip("verify the same product is added to cart with the same price", async 
 test.skip('verify searched product is present', async ({ page }) => {
 
     const homepage = new Homepage(page);
-
     const productName = 'JB Fragrances and Flavours - GOLD BD';
-
     await homepage.gotohomepage();
 
     await homepage.searchProduct(productName);
+    await homepage.searchResult(productName);
 
-    const product = page.locator(
-        `//a[normalize-space()='${productName}']`
-    );
-
-    await expect(product).toBeVisible();
+    await expect(page.locator(`//a[normalize-space()='${productName}']`)).toBeVisible();
 });
 
 test("Verify all Agarbatti Machine products", async ({ page }) => {
