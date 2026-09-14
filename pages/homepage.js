@@ -1,3 +1,5 @@
+const { expect } = require('@playwright/test');
+
 class homepage {
     constructor(page) {
         this.page = page;
@@ -8,6 +10,9 @@ class homepage {
         // login locators
         this.loginButtonLocator = "span[class='hidden text-sm font-medium lg:block']"
         this.loginLinkLocator = "//a[normalize-space()='Login / Register']"
+        this.productsMenu=page.locator('text=Spare Parts');
+        this.sparePartsCategory=page.locator('input[type="range"]');
+        this.productPrices=page.locator('.price');
     }
 
     async gotohomepage() {
@@ -53,7 +58,36 @@ class homepage {
 
         return productNames;
     }
-}
+   
+    async openSpareParts(){
+            await this.productsMenu.click();
+            await this.sparePartsCategory.click();
+            await this.page.waitForLoadState('networkidle');
+            }
+        async filterPriceBelow100()
+        {
+                await this.priceSlider.evaluate((slider) => {
+                    slider.value = 100;
+                    slider.dispatchEvent(new Event('input'));
+                    slider.dispatchEvent(new Event('change'));
+                });
+                await this.page.waitForLoadState('networkidle');
+            }
+
+            async verifyProductPricesBelow100() {
+                const count = await this.productPrices.count();
+                for (let i = 0; i < count; i++) {
+                    const text= await this.productPrices.nth(i).textContent();
+                    const price = Number(
+                        text.replace(/[^\d.]/g, '')
+                    );
+                    expect(price).toBeLessThanOrEqual(100);                    )
+
+        }
+        
+        }
+    }
+
 
 
 

@@ -31,6 +31,7 @@ test.skip("verify the same product is added to cart with the same price", async 
 
     const cartProduct = newPage.locator(
         "//a[normalize-space()='JB Fragrances and Flavours - GOLD BD']"
+
     );
 
     const cartProductName = await cartProduct.textContent();
@@ -73,4 +74,12 @@ test("Verify all Agarbatti Machine products", async ({ page }) => {
 
         expect(productNames[i].toLowerCase()).toContain("agarbatti machine");
     }
+});
+
+test("Verify all products in Spare Parts category are below 100", async ({ page }) => {
+    const homepage = new Homepage(page);
+    await homepage.gotohomepage();
+    await homepage.openSpareParts();
+    await homepage.filterPriceBelow100();
+    await homepage.verifyProductPricesBelow100()
 });
