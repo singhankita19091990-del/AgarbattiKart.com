@@ -81,7 +81,7 @@ class homepage {
                     const price = Number(
                         text.replace(/[^\d.]/g, '')
                     );
-                    expect(price).toBeLessThanOrEqual(100);                    )
+                    expect(price).toBeLessThanOrEqual(100);                    
 
         }
         

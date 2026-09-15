@@ -81,5 +81,5 @@ test("Verify all products in Spare Parts category are below 100", async ({ page 
     await homepage.gotohomepage();
     await homepage.openSpareParts();
     await homepage.filterPriceBelow100();
-    await homepage.verifyProductPricesBelow100()
+    await homepage.verifyProductsBelow100();
 });
