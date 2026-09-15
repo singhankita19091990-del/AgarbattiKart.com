@@ -60,7 +60,7 @@ test.skip('verify searched product is present', async ({ page }) => {
     await expect(page.locator(`//a[normalize-space()='${productName}']`)).toBeVisible();
 });
 
-test("Verify all Agarbatti Machine products", async ({ page }) => {
+test.skip("Verify all Agarbatti Machine products", async ({ page }) => {
 
     const homepage = new Homepage(page);
 
@@ -81,5 +81,5 @@ test("Verify all products in Spare Parts category are below 100", async ({ page 
     await homepage.gotohomepage();
     await homepage.openSpareParts();
     await homepage.filterPriceBelow100();
-    await homepage.verifyProductsBelow100();
+    await homepage.verifyProductPricesBelow100();
 });

@@ -10,7 +10,7 @@ class homepage {
         // login locators
         this.loginButtonLocator = "span[class='hidden text-sm font-medium lg:block']"
         this.loginLinkLocator = "//a[normalize-space()='Login / Register']"
-        this.productsMenu=page.locator('text=Spare Parts');
+        this.productsMenu = page.getByRole('link', { name: 'Spare Parts Spare Parts' });
         this.sparePartsCategory=page.locator('input[type="range"]');
         this.productPrices=page.locator('.price');
     }
@@ -66,7 +66,7 @@ class homepage {
             }
         async filterPriceBelow100()
         {
-                await this.priceSlider.evaluate((slider) => {
+                await this.sparePartsCategory.evaluate((slider) => {
                     slider.value = 100;
                     slider.dispatchEvent(new Event('input'));
                     slider.dispatchEvent(new Event('change'));
