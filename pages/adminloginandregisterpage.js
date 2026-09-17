@@ -46,6 +46,15 @@ class AdminLoginAndRegisterPage {
         return { productName, productPrice, newPage };
     }
 
+    async addSecondProduct(newPage) {
+
+    await newPage.click(
+        "(//button[normalize-space()='Add to Cart'])[2]"
+    );
+
+    await newPage.waitForTimeout(2000);
+}
+
 }
 
 module.exports = AdminLoginAndRegisterPage;

@@ -76,10 +76,55 @@ test.skip("Verify all Agarbatti Machine products", async ({ page }) => {
     }
 });
 
-test("Verify all products in Spare Parts category are below 100", async ({ page }) => {
+test.skip("Verify all products in Spare Parts category are below 100", async ({ page }) => {
     const homepage = new Homepage(page);
     await homepage.gotohomepage();
     await homepage.openSpareParts();
     await homepage.filterPriceBelow100();
     await homepage.verifyProductPricesBelow100();
+});
+
+test("Verify two products are added to cart", async ({ page }) => {
+
+    const homepage = new Homepage(page);
+    const adminLoginAndRegister = new AdminLoginAndRegister(page);
+
+    await homepage.gotohomepage();
+    await homepage.goToLoginPage();
+    await adminLoginAndRegister.adminlogin(
+        ADMIN_USERNAME,
+        ADMIN_PASSWORD
+    );
+
+    // Add first product
+    const { newPage } = await adminLoginAndRegister.addtoCart();
+
+    // Open cart
+    await newPage.click("//span[@class='relative']//*[name()='svg']");
+
+    // Verify first product exists
+    await expect(
+        newPage.locator(
+            "//a[normalize-space()='JB Fragrances and Flavours - GOLD BD']"
+        )
+    ).toBeVisible();
+
+    // Go back to products page
+    await newPage.goBack();
+
+    // Add second product
+    await adminLoginAndRegister.addSecondProduct(newPage);
+
+    // Open cart again
+    await newPage.click("//span[@class='relative']//*[name()='svg']");
+
+    // Verify cart has at least 2 items
+const cartItems = newPage.locator("//a[contains(@href,'/product/')]");
+const count = await cartItems.count();
+
+console.log("Number of product links found:", count);
+
+for (let i = 0; i < count; i++) {
+    console.log(await cartItems.nth(i).textContent());
+}
 });

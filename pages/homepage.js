@@ -10,7 +10,7 @@ class homepage {
         // login locators
         this.loginButtonLocator = "span[class='hidden text-sm font-medium lg:block']"
         this.loginLinkLocator = "//a[normalize-space()='Login / Register']"
-        this.productsMenu = page.getByRole('link', { name: 'Spare Parts Spare Parts' });
+        this.productsMenu = page.locator("//a[contains(text(),'Spare Parts')]");
         this.sparePartsCategory=page.locator('input[type="range"]');
         this.productPrices=page.locator('.price');
     }
