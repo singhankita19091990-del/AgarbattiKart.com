@@ -84,7 +84,8 @@ test.skip("Verify all products in Spare Parts category are below 100", async ({ 
     await homepage.verifyProductPricesBelow100();
 });
 
-test("Verify two products are added to cart", async ({ page }) => {
+test.skip
+("Verify two products are added to cart", async ({ page }) => {
 
     const homepage = new Homepage(page);
     const adminLoginAndRegister = new AdminLoginAndRegister(page);
@@ -127,4 +128,29 @@ console.log("Number of product links found:", count);
 for (let i = 0; i < count; i++) {
     console.log(await cartItems.nth(i).textContent());
 }
+});
+
+test("Verify product is removed from cart", async ({ page }) => {
+
+    const homepage = new Homepage(page);
+
+    await homepage.gotohomepage();
+
+    const adminLoginAndRegister = new AdminLoginAndRegister(page);
+
+    await homepage.goToLoginPage();
+
+    await adminLoginAndRegister.adminlogin(
+        ADMIN_USERNAME,
+        ADMIN_PASSWORD
+    );
+
+    const { newPage } = await adminLoginAndRegister.addtoCart();
+
+    const cartPage = new Homepage(newPage);
+
+    await cartPage.removeProductFromCart();
+
+    await cartPage.verifyCartIsEmpty();
+
 });

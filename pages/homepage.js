@@ -13,6 +13,10 @@ class homepage {
         this.productsMenu = page.locator("//a[contains(text(),'Spare Parts')]");
         this.sparePartsCategory=page.locator('input[type="range"]');
         this.productPrices=page.locator('.price');
+        this.cartIcon=page.locator('a[href="/cart"]');
+        this.removeButton = page.locator("button", { hasText: "Remove" });
+        this.emptyCartMessage=page.locator('text=Your cart is empty');
+
     }
 
     async gotohomepage() {
@@ -85,6 +89,14 @@ class homepage {
 
         }
         
+        }
+
+     async removeProductFromCart() {
+    await this.removeButton.first().click();
+    await this.page.waitForTimeout(2000); 
+}
+        async verifyCartIsEmpty() {
+            await expect(this.emptyCartMessage).toBeVisible();
         }
     }
 
