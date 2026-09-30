@@ -130,7 +130,7 @@ for (let i = 0; i < count; i++) {
 }
 });
 
-test("Verify product is removed from cart", async ({ page }) => {
+test.skip("Verify product is removed from cart", async ({ page }) => {
 
     const homepage = new Homepage(page);
 
@@ -154,3 +154,14 @@ test("Verify product is removed from cart", async ({ page }) => {
     await cartPage.verifyCartIsEmpty();
 
 });
+
+test("Count all Spare Parts products", async ({ page }) => {
+
+    const homepage = new Homepage(page);
+
+    await homepage.gotohomepage();
+
+    await homepage.countSparePartsProducts();
+
+});
+

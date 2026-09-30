@@ -98,6 +98,34 @@ class homepage {
         async verifyCartIsEmpty() {
             await expect(this.emptyCartMessage).toBeVisible();
         }
+
+
+ async countSparePartsProducts() {
+
+    await this.page.goto("https://www.agarbattikart.com/shop?category=spare-parts");
+    await this.page.waitForLoadState('networkidle');
+
+    let totalProducts = 0;
+
+    while (true) {
+
+        const products = this.page.locator("//a[contains(@href,'/product/')]");
+        totalProducts += await products.count();
+
+        const nextPage = this.page.locator("text=Next");
+
+        if (!(await nextPage.isVisible())) {
+            break;
+        }
+
+        await nextPage.click();
+        await this.page.waitForLoadState('networkidle');
+    }
+
+    console.log("Total Spare Parts Products =", totalProducts);
+
+    expect(totalProducts).toBeGreaterThan(0);
+}
     }
 
 
