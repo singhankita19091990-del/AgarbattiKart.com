@@ -100,34 +100,46 @@ class homepage {
         }
 
 
- async countSparePartsProducts() {
 
+
+
+async countSparePartsProducts() {
     await this.page.goto("https://www.agarbattikart.com/shop?category=spare-parts");
+
     await this.page.waitForLoadState('networkidle');
 
     let totalProducts = 0;
 
+    const products = this.page.locator("//a[contains(@href,'/product/')]");
+    const nextPage = this.page.locator('button[aria-label="Next page"]');
+
     while (true) {
+        const count = await products.count();
 
-        const products = this.page.locator("//a[contains(@href,'/product/')]");
-        totalProducts += await products.count();
+        console.log("Products on this page:", count);
 
-        const nextPage = this.page.locator("text=Next");
+        totalProducts = totalProducts + count;
 
-        if (!(await nextPage.isVisible())) {
+        // Stop when Next page is disabled
+        if (await nextPage.isDisabled()) {
             break;
         }
 
+        // Store the first product on the current page
+        const firstProduct = await products.first().getAttribute('href');
+
+        // Click Next page
         await nextPage.click();
-        await this.page.waitForLoadState('networkidle');
+
+        // Wait for the next page's products to load
+        await expect(products.first()).not.toHaveAttribute('href', firstProduct);
     }
 
     console.log("Total Spare Parts Products =", totalProducts);
 
     expect(totalProducts).toBeGreaterThan(0);
 }
-    }
-
+}
 
 
 
