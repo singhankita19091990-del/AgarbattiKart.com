@@ -137,7 +137,7 @@ async countSparePartsProducts() {
 
     console.log("Total Spare Parts Products =", totalProducts);
 
-    expect(totalProducts).toBeGreaterThan(0);
+    expect(totalProducts).toBe(124);
 }
 }
 

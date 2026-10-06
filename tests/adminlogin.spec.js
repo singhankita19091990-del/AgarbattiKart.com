@@ -163,5 +163,7 @@ test("Count all Spare Parts products", async ({ page }) => {
 
     await homepage.countSparePartsProducts();
 
+    
+
 });
 
