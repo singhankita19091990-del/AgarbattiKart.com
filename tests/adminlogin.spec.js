@@ -1,29 +1,31 @@
-const { test, expect } = require('@playwright/test')
-const Homepage = require('../pages/homepage')
-const AdminLoginAndRegister = require('../pages/adminloginandregisterpage')
+const { test, expect } = require('@playwright/test');
+const Homepage = require('../pages/homepage');
+const Category = require('../pages/category');
+const AdminLoginAndRegister = require('../pages/adminloginandregisterpage');
 
-const ADMIN_USERNAME = 'admin@agarbattikart.com'
-const ADMIN_PASSWORD = 'Admin@123'
+const ADMIN_USERNAME = 'admin@agarbattikart.com';
+const ADMIN_PASSWORD = 'Admin@123';
 
 test.skip("verify the login functionality with valid credentials", async ({ page }) => {
-    const homepage = new Homepage(page)
-    const adminLoginAndRegister = new AdminLoginAndRegister(page)
-    await homepage.gotohomepage()
-    await expect(page).toHaveTitle('AgarbattiKart — Incense & Pooja Essentials')
-    await homepage.goToLoginPage()
-    await adminLoginAndRegister.adminlogin(ADMIN_USERNAME, ADMIN_PASSWORD)
+    const homepage = new Homepage(page);
+    const adminLoginAndRegister = new AdminLoginAndRegister(page);
+
+    await homepage.gotohomepage();
+    await expect(page).toHaveTitle('AgarbattiKart — Incense & Pooja Essentials');
+
+    await homepage.goToLoginPage();
+    await adminLoginAndRegister.adminlogin(ADMIN_USERNAME, ADMIN_PASSWORD);
     await adminLoginAndRegister.checkLoginSuccess();
-
-})
-
-
+});
 
 test.skip("verify the same product is added to cart with the same price", async ({ page }) => {
-    const homepage = new Homepage(page)
-    const adminLoginAndRegister = new AdminLoginAndRegister(page)
-    await homepage.gotohomepage()
-    await homepage.goToLoginPage()
-    await adminLoginAndRegister.adminlogin(ADMIN_USERNAME, ADMIN_PASSWORD)
+    const homepage = new Homepage(page);
+    const adminLoginAndRegister = new AdminLoginAndRegister(page);
+
+    await homepage.gotohomepage();
+    await homepage.goToLoginPage();
+    await adminLoginAndRegister.adminlogin(ADMIN_USERNAME, ADMIN_PASSWORD);
+
     const { productName, productPrice, newPage } = await adminLoginAndRegister.addtoCart();
 
     console.log("Selected product:", productName);
@@ -31,7 +33,6 @@ test.skip("verify the same product is added to cart with the same price", async 
 
     const cartProduct = newPage.locator(
         "//a[normalize-space()='JB Fragrances and Flavours - GOLD BD']"
-
     );
 
     const cartProductName = await cartProduct.textContent();
@@ -46,30 +47,30 @@ test.skip("verify the same product is added to cart with the same price", async 
 
     expect(cartProductName).toBe(productName);
     expect(cartProductPrice).toContain(productPrice);
-})
+});
 
 test.skip('verify searched product is present', async ({ page }) => {
-
     const homepage = new Homepage(page);
     const productName = 'JB Fragrances and Flavours - GOLD BD';
-    await homepage.gotohomepage();
 
+    await homepage.gotohomepage();
     await homepage.searchProduct(productName);
     await homepage.searchResult(productName);
 
-    await expect(page.locator(`//a[normalize-space()='${productName}']`)).toBeVisible();
+    await expect(
+        page.locator(`//a[normalize-space()='${productName}']`)
+    ).toBeVisible();
 });
 
 test.skip("Verify all Agarbatti Machine products", async ({ page }) => {
-
     const homepage = new Homepage(page);
+    const category = new Category(page);
 
     await homepage.gotohomepage();
 
-    const productNames = await homepage.checkAgarbattiMachineProducts();
+    const productNames = await category.checkAgarbattiMachineProducts();
 
     for (let i = 0; i < productNames.length; i++) {
-
         console.log(productNames[i]);
 
         expect(productNames[i].toLowerCase()).toContain("agarbatti machine");
@@ -77,21 +78,20 @@ test.skip("Verify all Agarbatti Machine products", async ({ page }) => {
 });
 
 test.skip("Verify all products in Spare Parts category are below 100", async ({ page }) => {
-    const homepage = new Homepage(page);
-    await homepage.gotohomepage();
-    await homepage.openSpareParts();
-    await homepage.filterPriceBelow100();
-    await homepage.verifyProductPricesBelow100();
+    const category = new Category(page);
+
+    await category.openSpareParts();
+    await category.filterPriceBelow100();
+    await category.verifyProductPricesBelow100();
 });
 
-test.skip
-("Verify two products are added to cart", async ({ page }) => {
-
+test.skip("Verify two products are added to cart", async ({ page }) => {
     const homepage = new Homepage(page);
     const adminLoginAndRegister = new AdminLoginAndRegister(page);
 
     await homepage.gotohomepage();
     await homepage.goToLoginPage();
+
     await adminLoginAndRegister.adminlogin(
         ADMIN_USERNAME,
         ADMIN_PASSWORD
@@ -101,7 +101,7 @@ test.skip
     const { newPage } = await adminLoginAndRegister.addtoCart();
 
     // Open cart
-    await newPage.click("//span[@class='relative']//*[name()='svg']");
+    await newPage.click("//span[@class='relative']//\\*[name()='svg']");
 
     // Verify first product exists
     await expect(
@@ -117,27 +117,24 @@ test.skip
     await adminLoginAndRegister.addSecondProduct(newPage);
 
     // Open cart again
-    await newPage.click("//span[@class='relative']//*[name()='svg']");
+    await newPage.click("//span[@class='relative']//\\*[name()='svg']");
 
-    // Verify cart has at least 2 items
-const cartItems = newPage.locator("//a[contains(@href,'/product/')]");
-const count = await cartItems.count();
+    // Verify product links in cart
+    const cartItems = newPage.locator("//a[contains(@href,'/product/')]");
+    const count = await cartItems.count();
 
-console.log("Number of product links found:", count);
+    console.log("Number of product links found:", count);
 
-for (let i = 0; i < count; i++) {
-    console.log(await cartItems.nth(i).textContent());
-}
+    for (let i = 0; i < count; i++) {
+        console.log(await cartItems.nth(i).textContent());
+    }
 });
 
 test.skip("Verify product is removed from cart", async ({ page }) => {
-
     const homepage = new Homepage(page);
-
-    await homepage.gotohomepage();
-
     const adminLoginAndRegister = new AdminLoginAndRegister(page);
 
+    await homepage.gotohomepage();
     await homepage.goToLoginPage();
 
     await adminLoginAndRegister.adminlogin(
@@ -146,24 +143,14 @@ test.skip("Verify product is removed from cart", async ({ page }) => {
     );
 
     const { newPage } = await adminLoginAndRegister.addtoCart();
-
     const cartPage = new Homepage(newPage);
 
     await cartPage.removeProductFromCart();
-
     await cartPage.verifyCartIsEmpty();
-
 });
 
 test("Count all Spare Parts products", async ({ page }) => {
+    const category = new Category(page);
 
-    const homepage = new Homepage(page);
-
-    await homepage.gotohomepage();
-
-    await homepage.countSparePartsProducts();
-
-    
-
+    await category.countSparePartsProducts();
 });
-

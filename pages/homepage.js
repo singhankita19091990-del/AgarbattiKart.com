@@ -3,20 +3,20 @@ const { expect } = require('@playwright/test');
 class homepage {
     constructor(page) {
         this.page = page;
-        // search locators
-        this.searchLocator = 'input[placeholder*="Search for Agarbatti Machines, Chemical Compounds, DEP Oil…"]'
-        this.searchButtonLocator = "//button[@class='absolute right-1.5 top-1/2 -translate-y-1/2 rounded-md bg-primary-600 p-2 text-white']//*[name()='svg']"
 
-        // login locators
-        this.loginButtonLocator = "span[class='hidden text-sm font-medium lg:block']"
-        this.loginLinkLocator = "//a[normalize-space()='Login / Register']"
-        this.productsMenu = page.locator("//a[contains(text(),'Spare Parts')]");
-        this.sparePartsCategory=page.locator('input[type="range"]');
-        this.productPrices=page.locator('.price');
-        this.cartIcon=page.locator('a[href="/cart"]');
-        this.removeButton = page.locator("button", { hasText: "Remove" });
-        this.emptyCartMessage=page.locator('text=Your cart is empty');
+        // Search locators
+        this.searchLocator = 'input[placeholder*="Search for Agarbatti Machines, Chemical Compounds, DEP Oil…"]';
 
+        this.searchButtonLocator = "//button[@class='absolute right-1.5 top-1/2 -translate-y-1/2 rounded-md bg-primary-600 p-2 text-white']//\*[name()='svg']";
+
+        // Login locators
+        this.loginButtonLocator = "span[class='hidden text-sm font-medium lg\\:block']";
+        this.loginLinkLocator = "//a[normalize-space()='Login / Register']";
+
+        // Cart locators
+        this.cartIcon = this.page.locator('a[href="/cart"]');
+        this.removeButton = this.page.locator('button', { hasText: 'Remove' });
+        this.emptyCartMessage = this.page.locator('text=Your cart is empty');
     }
 
     async gotohomepage() {
@@ -24,124 +24,29 @@ class homepage {
     }
 
     async goToLoginPage() {
-        await this.page.locator("span[class='hidden text-sm font-medium lg:block']").click();
-        await this.page.locator("//a[normalize-space()='Login / Register']").click();
+        await this.page.locator(this.loginButtonLocator).click();
+        await this.page.locator(this.loginLinkLocator).click();
     }
 
     async searchProduct(productName) {
-        await this.page.locator(this.searchLocator);
+        await this.page.locator(this.searchLocator).fill(productName);
         await this.page.locator(this.searchButtonLocator).click();
     }
 
     async searchResult(productName) {
-        await this.page.locator(`//a[normalize-space()='${productName}']`).click();
-    }
-
-      async checkAgarbattiMachineProducts() {
-
-        
         await this.page.locator(
-            "a[href='/shop?category=agarbatti-machines']"
+            `//a[normalize-space()='${productName}']`
         ).click();
-
-        
-        const products = this.page.locator(
-            "//a[contains(@href,'/product/')]"
-        );
-
-        const count = await products.count();
-
-        const productNames = [];
-
-        for (let i = 0; i < count; i++) {
-
-            const productName = await products.nth(i).textContent();
-
-            productNames.push(productName);
-        }
-
-        return productNames;
-    }
-   
-    async openSpareParts(){
-            await this.productsMenu.click();
-            await this.sparePartsCategory.click();
-            await this.page.waitForLoadState('networkidle');
-            }
-        async filterPriceBelow100()
-        {
-                await this.sparePartsCategory.evaluate((slider) => {
-                    slider.value = 100;
-                    slider.dispatchEvent(new Event('input'));
-                    slider.dispatchEvent(new Event('change'));
-                });
-                await this.page.waitForLoadState('networkidle');
-            }
-
-            async verifyProductPricesBelow100() {
-                const count = await this.productPrices.count();
-                for (let i = 0; i < count; i++) {
-                    const text= await this.productPrices.nth(i).textContent();
-                    const price = Number(
-                        text.replace(/[^\d.]/g, '')
-                    );
-                    expect(price).toBeLessThanOrEqual(100);                    
-
-        }
-        
-        }
-
-     async removeProductFromCart() {
-    await this.removeButton.first().click();
-    await this.page.waitForTimeout(2000); 
-}
-        async verifyCartIsEmpty() {
-            await expect(this.emptyCartMessage).toBeVisible();
-        }
-
-
-
-
-
-async countSparePartsProducts() {
-    await this.page.goto("https://www.agarbattikart.com/shop?category=spare-parts");
-
-    await this.page.waitForLoadState('networkidle');
-
-    let totalProducts = 0;
-
-    const products = this.page.locator("//a[contains(@href,'/product/')]");
-    const nextPage = this.page.locator('button[aria-label="Next page"]');
-
-    while (true) {
-        const count = await products.count();
-
-        console.log("Products on this page:", count);
-
-        totalProducts = totalProducts + count;
-
-        // Stop when Next page is disabled
-        if (await nextPage.isDisabled()) {
-            break;
-        }
-
-        // Store the first product on the current page
-        const firstProduct = await products.first().getAttribute('href');
-
-        // Click Next page
-        await nextPage.click();
-
-        // Wait for the next page's products to load
-        await expect(products.first()).not.toHaveAttribute('href', firstProduct);
     }
 
-    console.log("Total Spare Parts Products =", totalProducts);
+    async removeProductFromCart() {
+        await this.removeButton.first().click();
+        await this.page.waitForTimeout(2000);
+    }
 
-    expect(totalProducts).toBe(124);
+    async verifyCartIsEmpty() {
+        await expect(this.emptyCartMessage).toBeVisible();
+    }
 }
-}
-
-
-
 
 module.exports = homepage;
